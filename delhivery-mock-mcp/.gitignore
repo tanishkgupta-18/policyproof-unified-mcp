@@ -1,0 +1,33 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment files and credentials
+.env
+.env.*
+*.pem
+*.key
+
+# Distribution and packaging artifacts
+*.zip
+*.tar.gz
+dist/
+build/
+*.egg-info/
+
+# Operating system artifacts
+.DS_Store
+Thumbs.db

@@ -1,0 +1,64 @@
+{
+  "policies": [
+    {
+      "policy_id": "POL-HDFC-TEST",
+      "policy_name": "[TEST DATA] HDFC ERGO Optima Secure",
+      "evidence": [
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 14,
+          "excerpt": "[TEST DATA] Pre-existing diseases are subject to a 36-month waiting period.",
+          "source_url": "https://example.com/test-data/hdfc.pdf#page=14"
+        },
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 18,
+          "excerpt": "[TEST DATA] Room rent is available up to the sum insured without a separate room-rent sub-limit.",
+          "source_url": "https://example.com/test-data/hdfc.pdf#page=18"
+        },
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 21,
+          "excerpt": "[TEST DATA] No mandatory co-pay applies for the standard policy configuration.",
+          "source_url": "https://example.com/test-data/hdfc.pdf#page=21"
+        },
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 24,
+          "excerpt": "[TEST DATA] The base sum insured may be restored after a covered hospitalization, subject to restoration conditions.",
+          "source_url": "https://example.com/test-data/hdfc.pdf#page=24"
+        }
+      ]
+    },
+    {
+      "policy_id": "POL-CARE-TEST",
+      "policy_name": "[TEST DATA] Care Supreme",
+      "evidence": [
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 11,
+          "excerpt": "[TEST DATA] Pre-existing diseases are subject to a 24-month waiting period.",
+          "source_url": "https://example.com/test-data/care.pdf#page=11"
+        },
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 16,
+          "excerpt": "[TEST DATA] Room rent is covered up to a single private room, subject to policy terms.",
+          "source_url": "https://example.com/test-data/care.pdf#page=16"
+        },
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 19,
+          "excerpt": "[TEST DATA] A 10 percent co-pay applies under the selected policy configuration.",
+          "source_url": "https://example.com/test-data/care.pdf#page=19"
+        },
+        {
+          "source": "[TEST DATA] Policy wording",
+          "page": 23,
+          "excerpt": "[TEST DATA] The sum insured can be restored after a covered claim, subject to policy restoration terms.",
+          "source_url": "https://example.com/test-data/care.pdf#page=23"
+        }
+      ]
+    }
+  ]
+}
