@@ -20,7 +20,7 @@ logger = logging.getLogger("policyproof-unified-mcp.gnani_tools")
 
 # Gnani API Endpoints
 GNANI_STT_URL = "https://api.vachana.ai/stt/v3"
-GNANI_TTS_URL = "https://api.gnani.ai/v1/tts/inference"
+GNANI_TTS_URL = "https://api.vachana.ai/v1/tts/inference"
 
 
 def get_stt_api_key() -> Optional[str]:
