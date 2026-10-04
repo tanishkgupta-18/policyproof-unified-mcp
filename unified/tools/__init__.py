@@ -10,6 +10,7 @@ from tools.delhivery_tools import (
     delhivery_track_shipment,
 )
 from tools.gnani_tools import (
+    get_credentials_status,
     gnani_speech_to_text,
     gnani_text_to_speech,
 )
@@ -21,6 +22,7 @@ __all__ = [
     "search_policy_evidence",
     "gnani_speech_to_text",
     "gnani_text_to_speech",
+    "get_credentials_status",
     "delhivery_pincode_serviceability",
     "delhivery_create_shipment",
     "delhivery_track_shipment",

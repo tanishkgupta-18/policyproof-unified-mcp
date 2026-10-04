@@ -185,14 +185,15 @@ async def gnani_speech_to_text(
 @mcp.tool(
     name="gnani_text_to_speech",
     description=(
-        "Synthesize speech from text using Gnani's real Text-to-Speech (TTS) API (https://api.gnani.ai/v1/tts/inference). "
+        "Synthesize speech from text using Gnani's real Text-to-Speech (TTS) API (https://api.vachana.ai/api/v1/tts/inference). "
         "Returns synthesized audio as base64 without writing permanently to disk."
     ),
 )
 async def gnani_text_to_speech(
     text: str,
     language: str = "en-IN",
-    voice: str = "Yashvi",
+    voice: str = "Nalini",
+    speed: float = 1.0,
     sample_rate: int = 48000,
 ) -> Dict[str, Any]:
     """Convert text into speech using Gnani TTS API.
@@ -200,7 +201,8 @@ async def gnani_text_to_speech(
     Args:
         text: Text string to synthesize into speech.
         language: Language code (default: 'en-IN').
-        voice: Voice name (default: 'Yashvi').
+        voice: Voice name (default: 'Nalini').
+        speed: Playback speed multiplier (default: 1.0, range 0.85 - 1.15).
         sample_rate: Audio sample rate in Hz (default: 48000).
 
     Returns:
@@ -212,6 +214,7 @@ async def gnani_text_to_speech(
         text=text,
         language=language,
         voice=voice,
+        speed=speed,
         sample_rate=sample_rate,
     )
 

@@ -1,6 +1,6 @@
 # PolicyProof Unified MCP Server
 
-Production-ready Model Context Protocol (MCP) server for **AgenticOrg** unifying insurance policy evidence retrieval, Gnani speech intelligence, and Delhivery logistics execution under a single, unified namespace.
+Production-ready Model Context Protocol (MCP) server for **AgenticOrg** unifying insurance policy evidence retrieval, Gnani speech intelligence (STT & TTS), and Delhivery logistics execution under a single, unified namespace.
 
 ---
 
@@ -25,8 +25,8 @@ The unified server registers and exposes exactly 8 production-grade MCP tools:
 |---|---|---|---|
 | 1 | `health_check` | System | Checks server operational health and service identification. |
 | 2 | `search_policy_evidence` | PolicyProof | Retrieves factual policy citations, pages, and excerpts from JSON store. |
-| 3 | `gnani_speech_to_text` | Gnani AI | Transcribes audio via real Gnani STT API (`https://api.vachana.ai/stt/v3`). |
-| 4 | `gnani_text_to_speech` | Gnani AI | Synthesizes speech via real Gnani TTS API (`https://api.gnani.ai/v1/tts/inference`). |
+| 3 | `gnani_speech_to_text` | Gnani AI | Transcribes audio via real Gnani STT REST API (`https://api.vachana.ai/stt/v3`). |
+| 4 | `gnani_text_to_speech` | Gnani AI | Synthesizes speech via real Gnani TTS REST API (`https://api.vachana.ai/api/v1/tts/inference`). |
 | 5 | `delhivery_pincode_serviceability` | Delhivery | Checks destination pincode serviceability for Prepaid, COD, and Reverse Pickup. |
 | 6 | `delhivery_create_shipment` | Delhivery | Manifests packages and books shipments in Delhivery logistics network. |
 | 7 | `delhivery_track_shipment` | Delhivery | Tracks parcel lifecycle status and checkpoint scan histories by AWB waybill. |
@@ -66,7 +66,10 @@ The unified server registers and exposes exactly 8 production-grade MCP tools:
   }
   ```
 
-### 3. `gnani_speech_to_text`
+### 3. `gnani_speech_to_text` (Audited per https://docs.gnani.ai/)
+- **Official Endpoint**: `POST https://api.vachana.ai/stt/v3`
+- **Auth Header**: `X-API-Key-ID: <GNANI_STT_API_KEY>`
+- **Content-Type**: `multipart/form-data`
 - **Inputs**:
   - `audio_base64` (string, required): Base64-encoded audio bytes (WAV, MP3, OGG, FLAC)
   - `filename` (string, default: `"audio.wav"`)
@@ -74,31 +77,73 @@ The unified server registers and exposes exactly 8 production-grade MCP tools:
   - `preferred_language` (string, default: `"en-IN"`)
   - `format` (string, default: `"transcribe"`)
   - `itn_native_numerals` (boolean, default: `true`)
-- **Output**:
+- **Output (Success)**:
   ```json
   {
     "success": true,
+    "service": "gnani_stt",
     "request_id": "req-12345",
     "timestamp": "2026-10-04T19:30:00Z",
     "transcript": "Transcribed text from real Gnani STT API",
     "raw_response": { ... }
   }
   ```
+- **Output (Missing Credentials)**:
+  ```json
+  {
+    "success": false,
+    "error_type": "missing_credentials",
+    "service": "gnani_stt",
+    "message": "GNANI_STT_API_KEY environment variable is not configured. Please set GNANI_STT_API_KEY."
+  }
+  ```
 
-### 4. `gnani_text_to_speech`
+### 4. `gnani_text_to_speech` (Audited per https://docs.gnani.ai/)
+- **Official Endpoint**: `POST https://api.vachana.ai/api/v1/tts/inference`
+- **Auth Header**: `X-API-Key-ID: <GNANI_TTS_API_KEY>`
+- **Content-Type**: `application/json`
+- **Official Model**: `timbre-v2.5`
 - **Inputs**:
   - `text` (string, required): Text to synthesize
   - `language` (string, default: `"en-IN"`)
-  - `voice` (string, default: `"Yashvi"`)
+  - `voice` (string, default: `"Nalini"`)
+  - `speed` (float, default: `1.0`, range `0.85` - `1.15`)
   - `sample_rate` (integer, default: `48000`)
-- **Output**:
+- **Payload Schema**:
+  ```json
+  {
+    "text": "Hello from PolicyProof.",
+    "model": "timbre-v2.5",
+    "voice": "Nalini",
+    "language": "en-IN",
+    "speed": 1.0,
+    "audio_config": {
+      "sample_rate": 48000,
+      "encoding": "linear_pcm",
+      "container": "wav",
+      "num_channels": 1,
+      "sample_width": 2
+    }
+  }
+  ```
+- **Output (Success)**:
   ```json
   {
     "success": true,
+    "service": "gnani_tts",
     "audio_base64": "<base64-encoded-audio>",
     "content_type": "audio/wav",
     "sample_rate": 48000,
     "raw_metadata": { ... }
+  }
+  ```
+- **Output (Missing Credentials)**:
+  ```json
+  {
+    "success": false,
+    "error_type": "missing_credentials",
+    "service": "gnani_tts",
+    "message": "GNANI_TTS_API_KEY environment variable is not configured. Please set GNANI_TTS_API_KEY."
   }
   ```
 
@@ -217,7 +262,11 @@ Server starts on `http://0.0.0.0:8000`.
 ### 5. Run Automated Verification Tests
 
 ```bash
+# Full server and MCP tests
 python test_server.py
+
+# Direct Gnani live diagnostics (non-MCP)
+python test_gnani_live.py
 ```
 
 ---
@@ -226,8 +275,8 @@ python test_server.py
 
 | Variable | Default | Description |
 |---|---|---|
-| `GNANI_STT_API_KEY` | None | API Key ID for Gnani Speech-to-Text API |
-| `GNANI_TTS_API_KEY` | None | Bearer token for Gnani Text-to-Speech API |
+| `GNANI_STT_API_KEY` | None | API Key for Gnani Speech-to-Text (`X-API-Key-ID`) |
+| `GNANI_TTS_API_KEY` | None | API Key for Gnani Text-to-Speech (`X-API-Key-ID`) |
 | `HOST` | `0.0.0.0` | Host IP binding |
 | `PORT` | `8000` | Port binding |
 | `ALLOWED_HOSTS` | `*` | Comma-separated list of allowed host header patterns |
@@ -279,12 +328,14 @@ python test_server.py
 
 ---
 
-## 8. Gnani Real API Integration
+## 8. Gnani Real API Integration & Audited Behavior
 
-- Calls **live** Gnani STT endpoint: `https://api.vachana.ai/stt/v3`
-- Calls **live** Gnani TTS endpoint: `https://api.gnani.ai/v1/tts/inference`
-- **Missing Credentials Resilience**: If `GNANI_STT_API_KEY` or `GNANI_TTS_API_KEY` are not provided in `.env`, the server **starts normally**, MCP discovery succeeds, and calling the tool returns a clean, structured `error_type: "missing_credentials"` payload.
-- No artificial, mock, or fake transcripts/audio are ever generated.
+- **STT Endpoint**: `POST https://api.vachana.ai/stt/v3`
+- **TTS Endpoint**: `POST https://api.vachana.ai/api/v1/tts/inference`
+- **Authentication**: `X-API-Key-ID: <API_KEY>`
+- **TTS Model**: `timbre-v2.5` with structured `audio_config`
+- **Missing Credentials Resilience**: If `GNANI_STT_API_KEY` or `GNANI_TTS_API_KEY` are unset, server starts normally, MCP discovery succeeds, and calling tools returns structured `error_type: "missing_credentials"` responses.
+- **Direct Live Diagnostics**: `python test_gnani_live.py` executes standalone tests to separate upstream credentials issues from MCP protocol issues.
 
 ---
 
@@ -294,4 +345,4 @@ python test_server.py
 - Supports test policy datasets:
   - `POL-HDFC-TEST`: HDFC ERGO Optima Secure (e.g. 36-month waiting period, room rent, restoration).
   - `POL-CARE-TEST`: Care Supreme (e.g. 24-month waiting period, 10% co-pay, single private room).
-- Pure factual retrieval with citations, page numbers, and source excerpts.
+- Pure factual retrieval with citations, page numbers, and source excerpts without LLM reasoning.

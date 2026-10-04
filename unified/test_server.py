@@ -127,7 +127,8 @@ class TestGnaniTools(unittest.IsolatedAsyncioTestCase):
             # Missing credentials must return structured error and NOT crash
             self.assertFalse(res["success"])
             self.assertEqual(res["error_type"], "missing_credentials")
-            self.assertIn("GNANI_STT_API_KEY", res["error"])
+            self.assertEqual(res["service"], "gnani_stt")
+            self.assertIn("GNANI_STT_API_KEY", res["message"])
         else:
             # If key present, must have timestamp and request_id
             self.assertIn("request_id", res)
@@ -141,7 +142,8 @@ class TestGnaniTools(unittest.IsolatedAsyncioTestCase):
             # Missing credentials must return structured error and NOT crash
             self.assertFalse(res["success"])
             self.assertEqual(res["error_type"], "missing_credentials")
-            self.assertIn("GNANI_TTS_API_KEY", res["error"])
+            self.assertEqual(res["service"], "gnani_tts")
+            self.assertIn("GNANI_TTS_API_KEY", res["message"])
         else:
             if res["success"]:
                 self.assertIn("audio_base64", res)
